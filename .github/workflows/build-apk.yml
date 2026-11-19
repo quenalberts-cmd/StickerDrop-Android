@@ -1,0 +1,75 @@
+# StickerDrop — build an installable Android debug APK on GitHub Actions.
+# Works with either:
+#   A) StickerDrop-Android-Prototype.zip uploaded to the repository root, or
+#   B) extracted Android project files in the repository root / StickerDrop-Android/
+name: Build StickerDrop APK
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build-apk:
+    name: Build Android APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Find StickerDrop Android project
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ -f "app/build.gradle" && -f "settings.gradle" ]]; then
+            project="$GITHUB_WORKSPACE"
+          elif [[ -f "StickerDrop-Android/app/build.gradle" ]]; then
+            project="$GITHUB_WORKSPACE/StickerDrop-Android"
+          elif [[ -f "StickerDrop-Android-Prototype.zip" ]]; then
+            mkdir -p "$RUNNER_TEMP/stickerdrop-source"
+            unzip -q "StickerDrop-Android-Prototype.zip" -d "$RUNNER_TEMP/stickerdrop-source"
+            project="$RUNNER_TEMP/stickerdrop-source/StickerDrop-Android"
+          else
+            echo "::error::Upload StickerDrop-Android-Prototype.zip to the repository root, or commit the unzipped project."
+            exit 1
+          fi
+          if [[ ! -f "$project/settings.gradle" || ! -f "$project/app/build.gradle" ]]; then
+            echo "::error::Cannot locate a valid StickerDrop Android Gradle project."
+            exit 1
+          fi
+          echo "PROJECT_DIR=$project" >> "$GITHUB_ENV"
+          echo "Building project at: $project"
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Install Android 35 SDK
+        run: sdkmanager "platforms;android-35" "build-tools;35.0.0"
+
+      # No gradlew file is bundled with this prototype.
+      - name: Set up Gradle 8.9
+        uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.9'
+
+      - name: Build debug APK
+        shell: bash
+        run: gradle --no-daemon --project-dir "$PROJECT_DIR" :app:assembleDebug
+
+      - name: Upload APK for download
+        uses: actions/upload-artifact@v4
+        with:
+          name: StickerDrop-debug-APK
+          path: ${{ env.PROJECT_DIR }}/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 30
