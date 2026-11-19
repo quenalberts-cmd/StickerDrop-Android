@@ -1,0 +1,58 @@
+{
+  "android_play_store_link": "",
+  "ios_app_store_link": "",
+  "sticker_packs": [
+    {
+      "identifier": "pop_1",
+      "name": "StickerDrop Originals",
+      "publisher": "StickerDrop",
+      "tray_image_file": "tray.png",
+      "image_data_version": "1",
+      "animated_sticker_pack": false,
+      "stickers": [
+        {
+          "image_file": "sticker1.webp",
+          "emojis": [
+            "✨"
+          ],
+          "accessibility_text": "A bright comic sticker saying Yes!"
+        },
+        {
+          "image_file": "sticker2.webp",
+          "emojis": [
+            "😒"
+          ],
+          "accessibility_text": "A bold sticker saying Nope"
+        },
+        {
+          "image_file": "sticker3.webp",
+          "emojis": [
+            "😂"
+          ],
+          "accessibility_text": "A comic sticker saying LOL"
+        },
+        {
+          "image_file": "sticker4.webp",
+          "emojis": [
+            "😱"
+          ],
+          "accessibility_text": "A comic sticker saying OMG"
+        },
+        {
+          "image_file": "sticker5.webp",
+          "emojis": [
+            "❤️"
+          ],
+          "accessibility_text": "A heart themed sticker saying Love"
+        },
+        {
+          "image_file": "sticker6.webp",
+          "emojis": [
+            "💸"
+          ],
+          "accessibility_text": "A playful money themed sticker saying MONEY"
+        }
+      ]
+    }
+  ]
+}

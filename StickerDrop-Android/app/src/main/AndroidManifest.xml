@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
+        <intent>
+            <action android:name="com.whatsapp.intent.action.ENABLE_STICKER_PACK" />
+        </intent>
+    </queries>
+    <application
+        android:allowBackup="false"
+        android:label="StickerDrop"
+        android:icon="@drawable/icon"
+        android:theme="@android:style/Theme.Material.Light.NoActionBar"
+        android:usesCleartextTraffic="false">
+        <activity android:name=".MainActivity" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- WhatsApp's official sticker pack provider. -->
+        <provider
+            android:name=".StickerPackProvider"
+            android:authorities="com.stickerdrop.app.stickercontentprovider"
+            android:exported="true"
+            android:enabled="true"
+            android:readPermission="com.whatsapp.sticker.READ" />
+        <!-- One-time read grants only, for Android drag-and-drop/sharing. -->
+        <provider
+            android:name=".ShareImageProvider"
+            android:authorities="com.stickerdrop.app.share"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+    </application>
+</manifest>
